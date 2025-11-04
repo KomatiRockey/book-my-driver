@@ -1,0 +1,21 @@
+Patched files:
+- metro.config.js         (maps react-native internal LoadingView to a local shim)
+- metro-shims/LoadingView.js  (minimal shim to satisfy imports)
+- package.json            (added expo-auth-session if missing)
+
+Why this was done:
+- Your Metro bundler crashed trying to import 'react-native/Libraries/Utilities/LoadingView', which has
+  been removed/relocated in recent React Native versions. Instead of performing a risky global version
+  downgrade/upgrade across many packages, I added a small shim and a metro resolver map so the project
+  can bundle and run on Android with Expo Go while preserving your existing codebase.
+  
+Next steps (what you must run locally):
+1. cd into project root: `cd <project-root>` (where package.json is)
+2. Run `npm install --legacy-peer-deps`
+3. Start Expo: `npx expo start`
+4. Use Expo Go on your phone and scan the QR code.
+
+Notes:
+- This shim is a maintenance shortcut. For a long-term, stable solution, we should align Expo SDK, React
+  and all native modules to a single tested SDK version (I can do a full upgrade if you want).
+- If other internal modules are missing, I can add similar shims or perform a full dependency alignment.
